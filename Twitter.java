@@ -33,7 +33,7 @@ public class Twitter {
         }
     }
 
-    
+//Bloco feito para adicionar o login em uma ArrayList, antes verifica se ele já existe    
     private static int verificaLogin(String login){
         Iterator<String> iter = logins.iterator();
         while(iter.hasNext()){
@@ -70,6 +70,7 @@ public class Twitter {
         return 1;
     }
 
+//Bloco que instância um novo usuário e o retorna;
     static Usuario constroiUsuario(){
         String nome, login, email, senha;
         Boolean verificaB;
@@ -105,11 +106,16 @@ public class Twitter {
         }while(!verificaB);
 
         Usuario user = new Usuario(nome, login, email, senha);
+        
         return user;
     }
 
+    public static ArrayList<Usuario> populaArray(Usuario user){
+
+    }
 
 
+//Bloco destinado ao menu inicial
     public static void menuInicial(){
         System.out.printf("Menu\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
         int opcao = input.nextInt();
@@ -131,7 +137,7 @@ public class Twitter {
                 System.out.println("Listar");
                 break;
             default:
-                System.out.println("SE FODER");
+                System.out.println("OPÇÃO INEXISTENTE");
                 break;
         }
         
