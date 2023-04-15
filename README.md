@@ -1,13 +1,13 @@
 # prompt-twitter-java
 
-#Introdução ao exercício
+## Introdução ao exercício
 
 Atividade realizada como nota parcial para nota da matéria Desenvolvimento de Software do curso de Análise e Desenvolvimento de Sistemas, 3º período, da Universidade Positivo em Curitiba.
 
 Abaixo os requisitos estipulados pelo professor Alexandre. Nenhuma questão abaixo foi estipulada por mim. Utilizando repositório para versionar o código e ficar visível.
 
 
-#Projeto 1
+## Projeto 1
 Desenvolver um programa em Java para simular uma versão simples do Twitter. O programa
 conterá duas classes, Usuario e Twitter (a classe de aplicação com o método main).
 
