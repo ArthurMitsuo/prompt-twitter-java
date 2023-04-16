@@ -5,7 +5,9 @@ import java.util.Iterator;
 
 public class Twitter {
     static Scanner input = new Scanner(System.in); 
+    private static Boolean verificacao = true;
     private static ArrayList<String> logins = new ArrayList<String>();
+    private static ArrayList<Usuario> arrayUser = new ArrayList<Usuario>();
 
     //métodos de verificação de caracteres
     private static Boolean verificaCaracterNL(String item){
@@ -29,6 +31,7 @@ public class Twitter {
         if(tS >= 6 && tS <= 15){
             return true;
         }else{
+            System.out.println("Digite entre 6 e 15 caracteres para a senha!");
             return false;
         }
     }
@@ -100,7 +103,7 @@ public class Twitter {
         }while(!verificaB);
         
         do{
-            System.out.println("SENHA: ");
+            System.out.println("SENHA - de 6 a 15 caracteres: ");
             senha = input.next();
             verificaB = verificaCaracterS(nome);
         }while(!verificaB);
@@ -110,22 +113,30 @@ public class Twitter {
         return user;
     }
 
-    public static ArrayList<Usuario> populaArray(Usuario user){
+    //Bloco para adicionar o usuário retornado pela função anterior no ArrayList estático
+    public static void populaArray(){
+       Usuario user = constroiUsuario();
 
+       arrayUser.add(user);
     }
 
 
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
+
         System.out.printf("Menu\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
 
         switch (opcao){
+            case 0:
+                System.out.println("Saindo...");
+                verificacao = false;
+                break;
             case 1:
                 System.out.println("Cadastrar");
-                constroiUsuario();
+                populaArray();
                 break;
             case 2:
                 System.out.println("Listar");
@@ -143,7 +154,8 @@ public class Twitter {
         
     }
     public static void main(String args[]){
-        menuInicial();
-        
+        while(verificacao){
+            menuInicial();
+        }       
     }
 }
