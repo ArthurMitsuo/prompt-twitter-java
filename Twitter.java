@@ -120,6 +120,10 @@ public class Twitter {
        arrayUser.add(user);
     }
 
+    public static void getUsuario(){
+        
+    }
+
 
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
