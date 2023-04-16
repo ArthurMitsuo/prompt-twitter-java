@@ -6,8 +6,12 @@ import java.util.Iterator;
 public class Twitter {
     static Scanner input = new Scanner(System.in); 
     private static Boolean verificacao = true;
+    //ArrayList que salva os nomes de login para verificação
     private static ArrayList<String> logins = new ArrayList<String>();
+    //ArrayList que salva os usuários como objetos usuários
     private static ArrayList<Usuario> arrayUser = new ArrayList<Usuario>();
+    //ArrayList que salva os usuários que estão logados (obs.: método utilizado, pois podem dois ou mais user estarem logados ao mesmo tempo)
+    private static ArrayList<Usuario> userLogado = new ArrayList<Usuario>();
 
     //métodos de verificação de caracteres
     private static Boolean verificaCaracterNL(String item){
@@ -109,7 +113,7 @@ public class Twitter {
         }while(!verificaB);
 
         Usuario user = new Usuario(nome, login, email, senha);
-        
+
         return user;
     }
 
@@ -121,7 +125,15 @@ public class Twitter {
     }
 
     public static void getUsuario(){
+        /* Iterator<arrayUser> iter = arrayUser.iterator();
         
+        while(iter.hasNext()){
+            System.out.printf("\nNome: %s\nEmail: %s\nLogin: %s\n-------", iter.getNome());
+        } */
+
+        for(Usuario user: arrayUser){
+            System.out.printf("\nNome: %s\nEmail: %s\nLogin: %s\n------\n", user.getNome(), user.getEmail(), user.getLogin());
+        }
     }
 
 
@@ -143,7 +155,8 @@ public class Twitter {
                 populaArray();
                 break;
             case 2:
-                System.out.println("Listar");
+                System.out.println("Listando usuários cadastrados: ");
+                getUsuario();
                 break;
             case 3:
                 System.out.println("Logar");
