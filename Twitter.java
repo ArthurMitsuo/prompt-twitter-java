@@ -1,3 +1,4 @@
+//Linhas abaixo para quando estou utilizando o notebook (teclado não tem facilmente as barras indicadas)
 //| \
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -5,7 +6,14 @@ import java.util.Iterator;
 
 public class Twitter {
     static Scanner input = new Scanner(System.in); 
+
+    //variáveis estáticas utilizadas para fins de estatística de usabilidade
+    static int usuariosLogados =0, totalTweets = 0;
+
+    //variável que verifica se o user quer sair ou não
     private static Boolean verificacao = true;
+
+
     //ArrayList que salva os nomes de login para verificação
     private static ArrayList<String> logins = new ArrayList<String>();
     //ArrayList que salva os usuários como objetos usuários
@@ -77,7 +85,7 @@ public class Twitter {
         return 1;
     }
 
-//Bloco que instância um novo usuário e o retorna;
+//Bloco que instância um novo usuário e o retorna, verificando os caracteres;
     static Usuario constroiUsuario(){
         String nome, login, email, senha;
         Boolean verificaB;
@@ -107,7 +115,7 @@ public class Twitter {
         }while(!verificaB);
         
         do{
-            System.out.println("SENHA - de 6 a 15 caracteres: ");
+            System.out.println("SENHA (de 6 a 15 caracteres): ");
             senha = input.next();
             verificaB = verificaCaracterS(nome);
         }while(!verificaB);
@@ -125,22 +133,61 @@ public class Twitter {
     }
 
     public static void getUsuario(){
-        /* Iterator<arrayUser> iter = arrayUser.iterator();
-        
-        while(iter.hasNext()){
-            System.out.printf("\nNome: %s\nEmail: %s\nLogin: %s\n-------", iter.getNome());
-        } */
-
         for(Usuario user: arrayUser){
             System.out.printf("\nNome: %s\nEmail: %s\nLogin: %s\n------\n", user.getNome(), user.getEmail(), user.getLogin());
         }
     }
 
+    private static Usuario logarUser(){
+        //Iterator<Usuario> iter = arrayUser.iterator();
+        Boolean validacao = true;
+        while(true){
+            String login, senha;
+            int tentativa=1;
+
+            System.out.print("Qual seu usuário: ");
+            login = input.next();
+            
+            System.out.printf("Qual a senha do user %s: ", login);
+            senha = input.next();
+
+            for(Usuario user : arrayUser){
+                if(user.validaSenha(senha) || user.getLogin().equals(login)){
+                    System.out.println("*****\nLogin efetuado\n*****");
+                    return user;
+                }
+            }
+            System.out.println("*****\nLogin ou senha inválidos\n*****");
+            while(tentativa != 1 || tentativa != 2){
+                System.out.println("\nAções possiveis:\n1 - Tentar de novo\n2 - Voltar para o Menu");
+                tentativa = input.nextInt();
+                if(tentativa == 1){
+                    break;
+                }else if(tentativa == 2){
+                    validacao = false;
+                    break;
+                }
+                else if(tentativa != 1){
+                    System.out.println("Opção não existente");  
+                };
+            }
+            if(!validacao){
+                break;
+            }     
+        }
+        //Em teoria nunca vai precisar ser retornado, mas para fins de não dar erro no método no VsCode
+        Usuario userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
+        return userTeste;
+    }
+  
+   /*  public static ArrayList<Usuario> adicionaUserLogado(Usuario user){
+
+    } */
 
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -160,6 +207,7 @@ public class Twitter {
                 break;
             case 3:
                 System.out.println("Logar");
+                logarUser();
                 break;
             case 4:
                 System.out.println("Listar");
