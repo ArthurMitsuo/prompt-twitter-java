@@ -54,14 +54,13 @@ public class Twitter {
         while(iter.hasNext()){
             String item = iter.next();
             if(item.equals(login)){
-                System.out.println("nao tem");
-                return 0;
-            }else{
                 System.out.println("tem");
-                return 1;
+                return 1; 
+            }else{
+                System.out.println("nao tem");
             }
         }
-        return 1;
+        return 0;
     }
     private static int adicionaLogin(String login){
         Iterator<String> iter = logins.iterator();
@@ -72,7 +71,8 @@ public class Twitter {
         }else{
             while(iter.hasNext()){
                 //String item = iter.next();
-                if(verificaLogin(login) == 1){
+                if(verificaLogin(login) == 0){
+                    System.out.println("Cadastrado");
                     logins.add(login);
                     return 0;
                 }else{
@@ -144,7 +144,16 @@ public class Twitter {
         Boolean validacao = true;
         while(true){
             String login, senha;
-            int tentativa=1;
+            int tentativa=1, quantidade=0;
+            
+            for(Usuario user:arrayUser){
+                quantidade++;
+            }
+            if(quantidade ==0){
+                System.out.println("Nenhum user cadastrado");
+                Usuario userTeste =new Usuario("12651961", "126519610320", "12651961", "12651961");
+                return userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
+            }
 
             System.out.print("Qual seu usuário: ");
             login = input.next();
@@ -153,7 +162,7 @@ public class Twitter {
             senha = input.next();
 
             for(Usuario user : arrayUser){
-                if(user.validaSenha(senha) || user.getLogin().equals(login)){
+                if(user.validaSenha(senha) && user.getLogin().equals(login)){
                     System.out.println("*****\nLogin efetuado\n*****");
                     return user;
                 }
@@ -180,23 +189,30 @@ public class Twitter {
         Usuario userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
         return userTeste;
     }
-    //Adiciona o user que foi
+//Adiciona o user que foi
     public static void adicionaUserLogado(){
         Usuario user = logarUser();
+        if(user.getNome().equals("12651961")){
+            return;
+        }
 
         usersLogados.add(user);
     }
     
     
-    //Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
+//Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
     public static void deslogarUsuarios(){
         Iterator<Usuario> iter = usersLogados.iterator();
         int quantidade = 0, opcao;
         //puramente para salar o nome dos users logados em uma array para mostrar na opção
         for(Usuario user : usersLogados){
+            System.out.println(user);
             quantidade++;
         }
-
+        if(quantidade == 0){
+            System.out.println("Nenhum user logado");
+            return;
+        }
         String[] nomes = new String[quantidade];
 
         for(int i = 0; i < nomes.length; i++){
@@ -231,7 +247,7 @@ public class Twitter {
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n5 - deslogar\n... ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -264,7 +280,6 @@ public class Twitter {
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
                 break;
         }
-        
     }
     public static void main(String args[]){
         while(verificacao){
