@@ -21,6 +21,10 @@ public class Twitter {
     //ArrayList que salva os usuários que estão logados (obs.: método utilizado, pois podem dois ou mais user estarem logados ao mesmo tempo)
     private static ArrayList<Usuario> usersLogados = new ArrayList<Usuario>();
 
+    //Objetos ArrayLists que andam de mãos dadas, quando alguém tweeta, salva o tweet em uma e o usuário em outra
+    private static ArrayList<String> tweetsFeitos = new ArrayList<String>();
+    private static ArrayList<Usuario> usersTweets = new ArrayList<Usuario>();
+
     //métodos de verificação de caracteres
     private static Boolean verificaCaracterNL(String item){
         int tS = item.length();
@@ -152,7 +156,7 @@ public class Twitter {
             if(quantidade ==0){
                 System.out.println("Nenhum user cadastrado");
                 Usuario userTeste =new Usuario("12651961", "126519610320", "12651961", "12651961");
-                return userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
+                return userTeste;
             }
 
             System.out.print("Qual seu usuário: ");
@@ -189,6 +193,7 @@ public class Twitter {
         Usuario userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
         return userTeste;
     }
+
 //Adiciona o user que foi
     public static void adicionaUserLogado(){
         Usuario user = logarUser();
@@ -197,8 +202,7 @@ public class Twitter {
         }
 
         usersLogados.add(user);
-    }
-    
+    } 
     
 //Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
     public static void deslogarUsuarios(){
