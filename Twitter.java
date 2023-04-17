@@ -19,7 +19,7 @@ public class Twitter {
     //ArrayList que salva os usuários como objetos usuários
     private static ArrayList<Usuario> arrayUser = new ArrayList<Usuario>();
     //ArrayList que salva os usuários que estão logados (obs.: método utilizado, pois podem dois ou mais user estarem logados ao mesmo tempo)
-    private static ArrayList<Usuario> userLogado = new ArrayList<Usuario>();
+    private static ArrayList<Usuario> usersLogados = new ArrayList<Usuario>();
 
     //métodos de verificação de caracteres
     private static Boolean verificaCaracterNL(String item){
@@ -131,7 +131,8 @@ public class Twitter {
 
        arrayUser.add(user);
     }
-
+    
+    //Método para listar os usuários cadastrados
     public static void getUsuario(){
         for(Usuario user: arrayUser){
             System.out.printf("\nNome: %s\nEmail: %s\nLogin: %s\n------\n", user.getNome(), user.getEmail(), user.getLogin());
@@ -179,15 +180,58 @@ public class Twitter {
         Usuario userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
         return userTeste;
     }
-  
-   /*  public static ArrayList<Usuario> adicionaUserLogado(Usuario user){
+    //Adiciona o user que foi
+    public static void adicionaUserLogado(){
+        Usuario user = logarUser();
 
-    } */
+        usersLogados.add(user);
+    }
+    
+    
+    //Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
+    public static void deslogarUsuarios(){
+        Iterator<Usuario> iter = usersLogados.iterator();
+        int quantidade = 0, opcao;
+        //puramente para salar o nome dos users logados em uma array para mostrar na opção
+        for(Usuario user : usersLogados){
+            quantidade++;
+        }
+
+        String[] nomes = new String[quantidade];
+
+        for(int i = 0; i < nomes.length; i++){
+            for(Usuario user : usersLogados){
+                if(i == 0){
+                    nomes[i] = user.getLogin();
+                }
+                if(nomes[i].equals(user.getLogin())){
+                    break;
+                }
+                nomes[i] = user.getLogin();
+                break;
+            }
+        }
+
+        System.out.println("\n*****\nLista de usuarios: ");
+        for(int i= 0 ; i<nomes.length; i++){
+            System.out.printf("%d - %s\n", i+1, nomes[i]);
+        }
+        System.out.printf("Qual usuário gostaria de deslogar (digite o numero)? ");
+        opcao = input.nextInt();
+
+        while(iter.hasNext()){
+            Usuario item = iter.next();
+            if(item.getNome().equals(nomes[opcao-1])){
+                iter.remove();
+                System.out.println("User deslogado");
+            }
+        }
+    }
 
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n5 - deslogar\n... ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -207,13 +251,17 @@ public class Twitter {
                 break;
             case 3:
                 System.out.println("Logar");
-                logarUser();
+                adicionaUserLogado();
                 break;
             case 4:
-                System.out.println("Listar");
+                System.out.println("Deslogar");
+                deslogarUsuarios();
+                break;
+            case 5:
+                System.out.println("Tweetar");
                 break;
             default:
-                System.out.println("OPÇÃO INEXISTENTE");
+                System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
                 break;
         }
         
