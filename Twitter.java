@@ -1,8 +1,10 @@
 //Linhas abaixo para quando estou utilizando o notebook (teclado não tem facilmente as barras indicadas)
 //| \
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Date;
 
 public class Twitter {
     static Scanner input = new Scanner(System.in);
@@ -20,6 +22,11 @@ public class Twitter {
     private static ArrayList<Usuario> arrayUser = new ArrayList<Usuario>();
     //ArrayList que salva os usuários que estão logados (obs.: método utilizado, pois podem dois ou mais user estarem logados ao mesmo tempo)
     private static ArrayList<Usuario> usersLogados = new ArrayList<Usuario>();
+    //ArrayLists que funcionam como feed, duas ArrayLists para ligar as posições dos textos aos usuários
+    private static ArrayList<String> feedTweets = new ArrayList<String>();
+    private static ArrayList<String> feedUser = new ArrayList<String>();
+  
+
 
     //métodos de verificação de caracteres
     private static Boolean verificaCaracterNL(String item){
@@ -248,10 +255,7 @@ public class Twitter {
     public static String selecionaUserLogado(){
         Iterator<Usuario> iter = usersLogados.iterator();
         int quantidade = 0, opcao, quantidadeAux = 0;
-        if(!iter.hasNext()){
-            System.out.println("*****\nNenhum usuário logado, operação impossível\n*****\n");
-            return "!@#$%&**&%$#@!";
-        }
+
         do{
             System.out.print("Selecione o numero do usuário logado: ");
             
@@ -265,30 +269,31 @@ public class Twitter {
             //limpa o buffer
             input.nextLine();
         }while(opcao <= 0 && opcao > quantidade+1);
-        System.out.println("OPÇÃO DIGITADA: "+opcao);
         
         for(Usuario user: usersLogados){
             if(quantidadeAux == opcao){
                 return user.getNome();
-            }else{
-                System.out.println("AINDA NÃO");
             }
             quantidadeAux++;
         }
         //apenas para satisfazer o método
-        return "ISSO DAQUI";
+        return "ISSO DAQUI NÃO É PARA RETORNAR EM HIPÓTESE ALGUMA";
     }
 
 //Bloco para o usuário logado selecionado digitar um tweet de 1 de 140 caracteres.
     public static void tweeta(){
-        String tweet;
+        Date dataHoraAtual = new Date();
+        String tweet, dataDia = new SimpleDateFormat("DD/MM/YYYY").format(dataHoraAtual), dataHora = new SimpleDateFormat("HH:MM").format(dataHoraAtual);
         int tamanho;
-        String user = selecionaUserLogado();
-        if(user == "!@#$%&**&%$#@!"){
+
+        Iterator<Usuario> iter = usersLogados.iterator();
+        if(!iter.hasNext()){
+            System.out.println("*****\nNenhum usuário logado, operação impossível\n*****\n");
+            //retorna se não há nenhum user logado
             return;
         }
-        Iterator<Usuario> iter = arrayUser.iterator();
 
+        String user = selecionaUserLogado();
         
         do{
             System.out.println(user+" digite o seu tweet(de 1 a 140 caracteres):");
@@ -299,7 +304,10 @@ public class Twitter {
         while(iter.hasNext()){
             Usuario item = iter.next();
             if(item.getLogin().equals(user)){
-                item.setTweet(tweet);
+                item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
+                feedUser.add(item.getLogin());
+                feedTweets.add(tweet+"\n"+dataDia+" - "+dataHora);
+
             }
         }
     }

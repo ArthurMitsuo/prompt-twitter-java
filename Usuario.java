@@ -40,7 +40,7 @@ public class Usuario{
     
     public void setTweet(String tweet){
         if(!verificaTweets(tweet)){
-            System.out.println("TWEET REPETIDO");
+            System.out.println("*****\nTweet Repetido, não é possível prosseguir\n*****");
             
         }else{
             tweets.add(tweet);
