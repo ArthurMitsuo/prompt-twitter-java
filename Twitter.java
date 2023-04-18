@@ -204,39 +204,41 @@ public class Twitter {
 //Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
     public static void deslogarUsuarios(){
         Iterator<Usuario> iter = usersLogados.iterator();
-        int quantidade = 0;
-        String opcao;
-        //Boolean maisUmaVerificacao = true;
+
+        //String abaixo apenas inicializa a variável como não vazia, apenas para não acusar erro
+        String opcao = "oi";
+        Boolean maisUmaVerificacao = true;
 
         ArrayList<String> nomes = new ArrayList<String>();
-       
-        System.out.println("\n*****\nLista de usuarios: ");
-        for(Usuario user : usersLogados){
-            System.out.printf("%d - %s\n", quantidade+1, user.getLogin());
-            nomes.add(user.getLogin());
-            quantidade ++;
+        if(!iter.hasNext()){
+            maisUmaVerificacao = false;
+            System.out.println("*****\nNenhum user logado - operação impossivel\n*****\n");
         }
 
-        while(true){
-            System.out.printf("Qual usuário gostaria de deslogar (digite o numero)? ");
+
+        System.out.println("\n*****\nLista de usuarios: ");
+        for(Usuario user : usersLogados){
+            System.out.printf("* %s\n", user.getLogin());
+            nomes.add(user.getLogin());
+        }        
+        while(maisUmaVerificacao){
+            System.out.printf("Qual usuário gostaria de deslogar (digite username)? ");
             opcao = input.next();
             //Limpa o buffer
             input.nextLine();
             for(Usuario user : usersLogados){
-                if(opcao.equals(opcao)){
-                    break;
+                if(user.getNome().equals(opcao)){
+                    maisUmaVerificacao = false;
                 }   
             }
         }
-        
-//CONTINUAR AQUI A VERIFICACAO
-
         while(iter.hasNext()){
             Usuario item = iter.next();
-            for(String nome:nomes){
-                if(item.getNome().equals(nome)){
+            for(String nome : nomes){
+                if(item.getLogin().equals(opcao)){
+                    
+                    System.out.println("User "+item.getLogin()+" deslogado");
                     iter.remove();
-                    System.out.println("User deslogado");
                 }
             }
         }
@@ -246,10 +248,13 @@ public class Twitter {
     public static String selecionaUserLogado(){
         Iterator<Usuario> iter = usersLogados.iterator();
         int quantidade = 0, opcao, quantidadeAux = 0;
-
+        if(!iter.hasNext()){
+            System.out.println("*****\nNenhum usuário logado, operação impossível\n*****\n");
+            return "!@#$%&**&%$#@!";
+        }
         do{
             System.out.print("Selecione o numero do usuário logado: ");
-
+            
             while(iter.hasNext()){
                 Usuario item = iter.next();
 
@@ -279,9 +284,12 @@ public class Twitter {
         String tweet;
         int tamanho;
         String user = selecionaUserLogado();
-
+        if(user == "!@#$%&**&%$#@!"){
+            return;
+        }
         Iterator<Usuario> iter = arrayUser.iterator();
 
+        
         do{
             System.out.println(user+" digite o seu tweet(de 1 a 140 caracteres):");
             tweet = input.nextLine();
