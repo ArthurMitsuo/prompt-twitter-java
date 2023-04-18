@@ -139,6 +139,8 @@ public class Twitter {
     }
 
     private static Usuario logarUser(){
+        //FAZER FUNÇÃO de verificar SE O USER JÁ FOI LIGADO
+
         //Iterator<Usuario> iter = arrayUser.iterator();
         Boolean validacao = true;
         while(true){
@@ -202,51 +204,40 @@ public class Twitter {
 //Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
     public static void deslogarUsuarios(){
         Iterator<Usuario> iter = usersLogados.iterator();
-        int quantidade = 0, opcao;
+        int quantidade = 0;
+        String opcao;
         //Boolean maisUmaVerificacao = true;
 
-        //puramente para salar o nome dos users logados em uma array para mostrar na opção
-        for(Usuario user : usersLogados){
-            System.out.println("USER LOGADO: "+user.getNome()); //apagar depois
-            quantidade++;
-        }
-        if(quantidade == 0){
-            System.out.println("Nenhum user logado");
-            return;
-        }
-        String[] nomes = new String[quantidade];
-
-        //PRESTAR ATENÇÃO AQUI, TA DANDO ERRO
-        for(Usuario user : usersLogados){
-            for(int i = 0; i <= nomes.length; i++){
-                if(i == 0 && !nomes[i].equals(user.getLogin())){
-                    nomes[i] = user.getLogin();
-                }else if(!nomes[i].equals(user.getLogin())){
-                    nomes[i] = user.getLogin();
-                }
-            }
-        }
-        
-
+        ArrayList<String> nomes = new ArrayList<String>();
+       
         System.out.println("\n*****\nLista de usuarios: ");
-        for(int i= 0 ; i<nomes.length; i++){
-            System.out.printf("%d - %s\n", i+1, nomes[i]);
+        for(Usuario user : usersLogados){
+            System.out.printf("%d - %s\n", quantidade+1, user.getLogin());
+            nomes.add(user.getLogin());
+            quantidade ++;
         }
+
         while(true){
             System.out.printf("Qual usuário gostaria de deslogar (digite o numero)? ");
-            opcao = input.nextInt();
-            if(opcao <= nomes.length && opcao > 0){
-                break;
+            opcao = input.next();
+            //Limpa o buffer
+            input.nextLine();
+            for(Usuario user : usersLogados){
+                if(opcao.equals(opcao)){
+                    break;
+                }   
             }
         }
         
+//CONTINUAR AQUI A VERIFICACAO
 
         while(iter.hasNext()){
             Usuario item = iter.next();
-            
-            if(item.getNome().equals(nomes[opcao-1])){
-                iter.remove();
-                System.out.println("User deslogado");
+            for(String nome:nomes){
+                if(item.getNome().equals(nome)){
+                    iter.remove();
+                    System.out.println("User deslogado");
+                }
             }
         }
     }
