@@ -1,7 +1,9 @@
-
+import java.util.ArrayList;
+import java.util.Iterator;
 public class Usuario{
     private String nome, login, email, senha;
     public static int quantidadeUsersCadastrados = 0;
+    public ArrayList<String> tweets = new ArrayList<String>();
 
     public Usuario(String nome, String login, String email, String senha){
         this.nome = nome;
@@ -16,6 +18,34 @@ public class Usuario{
             return true;
         }
         return false;
+    }
+    public void setSenha(String senha){
+        if(validaSenha(senha) == true){
+
+        }else{
+            System.out.println("*****\nSenha Incorreta, Impossível alterar\n*****\n");
+        }
+    }
+
+    private Boolean verificaTweets(String tweet){
+        Iterator<String> iter = tweets.iterator();
+
+        while(iter.hasNext()){
+            String item = iter.next();
+            if(tweet.equals(item));
+            return false;
+        }
+        return true;
+    }
+    
+    public void setTweet(String tweet){
+        if(!verificaTweets(tweet)){
+            System.out.println("TWEET REPETIDO");
+            
+        }else{
+            tweets.add(tweet);
+            System.out.println("TWEETADO");
+        }  
     }
 
     public String getNome(){

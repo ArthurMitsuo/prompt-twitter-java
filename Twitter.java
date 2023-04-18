@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Twitter {
-    static Scanner input = new Scanner(System.in); 
+    static Scanner input = new Scanner(System.in);
 
     //variáveis estáticas utilizadas para fins de estatística de usabilidade
     static int usuariosLogados =0, totalTweets = 0;
@@ -20,10 +20,6 @@ public class Twitter {
     private static ArrayList<Usuario> arrayUser = new ArrayList<Usuario>();
     //ArrayList que salva os usuários que estão logados (obs.: método utilizado, pois podem dois ou mais user estarem logados ao mesmo tempo)
     private static ArrayList<Usuario> usersLogados = new ArrayList<Usuario>();
-
-    //Objetos ArrayLists que andam de mãos dadas, quando alguém tweeta, salva o tweet em uma e o usuário em outra
-    private static ArrayList<String> tweetsFeitos = new ArrayList<String>();
-    private static ArrayList<Usuario> usersTweets = new ArrayList<Usuario>();
 
     //métodos de verificação de caracteres
     private static Boolean verificaCaracterNL(String item){
@@ -43,10 +39,11 @@ public class Twitter {
         }
     }
     private static Boolean verificaCaracterS(String item){
-        int tS = item.length();
-        if(tS >= 6 && tS <= 15){
+        if(item.length() >= 6 && item.length() <= 15){
+            System.out.println(item.length());
             return true;
         }else{
+            System.out.println(item.length());
             System.out.println("Digite entre 6 e 15 caracteres para a senha!");
             return false;
         }
@@ -108,8 +105,6 @@ public class Twitter {
             input.nextLine();
             verificaB = verificaCaracterNL(login);
             verifica = adicionaLogin(login);
-    
-            System.out.println("VERIFICA "+verifica);
         }while(verifica != 0 || !verificaB);
         
         do{
@@ -121,7 +116,7 @@ public class Twitter {
         do{
             System.out.println("SENHA (de 6 a 15 caracteres): ");
             senha = input.next();
-            verificaB = verificaCaracterS(nome);
+            verificaB = verificaCaracterS(senha);
         }while(!verificaB);
 
         Usuario user = new Usuario(nome, login, email, senha);
@@ -190,17 +185,17 @@ public class Twitter {
             }     
         }
         //Em teoria nunca vai precisar ser retornado, mas para fins de não dar erro no método no VsCode
-        Usuario userTeste=new Usuario("12651961", "126519610320", "12651961", "12651961");
+        Usuario userTeste=new Usuario(null, null, null, null);
         return userTeste;
     }
 
 //Adiciona o user que foi
     public static void adicionaUserLogado(){
         Usuario user = logarUser();
-        if(user.getNome().equals("12651961")){
+        if(user.getNome().equals(null)){
             return;
         }
-
+        
         usersLogados.add(user);
     } 
     
@@ -208,9 +203,11 @@ public class Twitter {
     public static void deslogarUsuarios(){
         Iterator<Usuario> iter = usersLogados.iterator();
         int quantidade = 0, opcao;
+        //Boolean maisUmaVerificacao = true;
+
         //puramente para salar o nome dos users logados em uma array para mostrar na opção
         for(Usuario user : usersLogados){
-            System.out.println(user);
+            System.out.println("USER LOGADO: "+user.getNome()); //apagar depois
             quantidade++;
         }
         if(quantidade == 0){
@@ -219,28 +216,34 @@ public class Twitter {
         }
         String[] nomes = new String[quantidade];
 
-        for(int i = 0; i < nomes.length; i++){
-            for(Usuario user : usersLogados){
-                if(i == 0){
+        //PRESTAR ATENÇÃO AQUI, TA DANDO ERRO
+        for(Usuario user : usersLogados){
+            for(int i = 0; i <= nomes.length; i++){
+                if(i == 0 && !nomes[i].equals(user.getLogin())){
+                    nomes[i] = user.getLogin();
+                }else if(!nomes[i].equals(user.getLogin())){
                     nomes[i] = user.getLogin();
                 }
-                if(nomes[i].equals(user.getLogin())){
-                    break;
-                }
-                nomes[i] = user.getLogin();
-                break;
             }
         }
+        
 
         System.out.println("\n*****\nLista de usuarios: ");
         for(int i= 0 ; i<nomes.length; i++){
             System.out.printf("%d - %s\n", i+1, nomes[i]);
         }
-        System.out.printf("Qual usuário gostaria de deslogar (digite o numero)? ");
-        opcao = input.nextInt();
+        while(true){
+            System.out.printf("Qual usuário gostaria de deslogar (digite o numero)? ");
+            opcao = input.nextInt();
+            if(opcao <= nomes.length && opcao > 0){
+                break;
+            }
+        }
+        
 
         while(iter.hasNext()){
             Usuario item = iter.next();
+            
             if(item.getNome().equals(nomes[opcao-1])){
                 iter.remove();
                 System.out.println("User deslogado");
@@ -248,10 +251,65 @@ public class Twitter {
         }
     }
 
+//Bloco para selecionar usuário logado
+    public static String selecionaUserLogado(){
+        Iterator<Usuario> iter = usersLogados.iterator();
+        int quantidade = 0, opcao, quantidadeAux = 0;
+
+        do{
+            System.out.print("Selecione o numero do usuário logado: ");
+
+            while(iter.hasNext()){
+                Usuario item = iter.next();
+
+                System.out.printf("\n%d - %s\n",quantidade+1, item.getNome());
+                quantidade++;
+            }
+            opcao = input.nextInt()-1;
+            //limpa o buffer
+            input.nextLine();
+        }while(opcao <= 0 && opcao > quantidade+1);
+        System.out.println("OPÇÃO DIGITADA: "+opcao);
+        
+        for(Usuario user: usersLogados){
+            if(quantidadeAux == opcao){
+                return user.getNome();
+            }else{
+                System.out.println("AINDA NÃO");
+            }
+            quantidadeAux++;
+        }
+        //apenas para satisfazer o método
+        return "ISSO DAQUI";
+    }
+
+//Bloco para o usuário logado selecionado digitar um tweet de 1 de 140 caracteres.
+    public static void tweeta(){
+        String tweet;
+        int tamanho;
+        String user = selecionaUserLogado();
+
+        Iterator<Usuario> iter = arrayUser.iterator();
+
+        do{
+            System.out.println(user+" digite o seu tweet(de 1 a 140 caracteres):");
+            tweet = input.nextLine();
+            tamanho = tweet.length();
+        }while(tamanho <1 && tamanho >140);
+        
+        while(iter.hasNext()){
+            Usuario item = iter.next();
+            if(item.getLogin().equals(user)){
+                item.setTweet(tweet);
+            }
+        }
+    }
+
+
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - deslogar\n... ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- mostrar últimos tweets do feed\n...\n ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -279,7 +337,9 @@ public class Twitter {
                 break;
             case 5:
                 System.out.println("Tweetar");
+                tweeta();
                 break;
+            
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
                 break;
@@ -289,5 +349,5 @@ public class Twitter {
         while(verificacao){
             menuInicial();
         }       
-    }
+    }//arthur osmario felipe
 }
