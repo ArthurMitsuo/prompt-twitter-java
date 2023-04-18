@@ -159,7 +159,7 @@ public class Twitter {
             }
             if(quantidade ==0){
                 System.out.println("Nenhum user cadastrado");
-                Usuario userTeste =new Usuario("12651961", "126519610320", "12651961", "12651961");
+                Usuario userTeste =new Usuario("12651961%$#@", "126519610320#@!$!#@!#", "12651961$#@$", "12651961$@#!");
                 return userTeste;
             }
 
@@ -251,8 +251,8 @@ public class Twitter {
         }
     }
 
-//Bloco para selecionar usuário logado
-    public static String selecionaUserLogado(){
+//Método para selecionar usuário logado
+    public static Usuario selecionaUserLogado(){
         Iterator<Usuario> iter = usersLogados.iterator();
         int quantidade = 0, opcao, quantidadeAux = 0;
 
@@ -269,16 +269,20 @@ public class Twitter {
             //limpa o buffer
             input.nextLine();
         }while(opcao <= 0 && opcao > quantidade+1);
-        
-        for(Usuario user: usersLogados){
+
+        while(iter.hasNext()){
+            Usuario item = iter.next();
+    
             if(quantidadeAux == opcao){
-                return user.getNome();
+                return item;
             }
-            quantidadeAux++;
         }
-        //apenas para satisfazer o método
-        return "ISSO DAQUI NÃO É PARA RETORNAR EM HIPÓTESE ALGUMA";
+        
+        //apenas para satisfazer o método, não é para retornar nunca
+        Usuario userTeste =new Usuario("12651961%$#@", "126519610320#@!$!#@!#", "12651961$#@$", "12651961$@#!");
+        return userTeste;
     }
+
 
 //Bloco para o usuário logado selecionado digitar um tweet de 1 de 140 caracteres.
     public static void tweeta(){
@@ -293,7 +297,7 @@ public class Twitter {
             return;
         }
 
-        String user = selecionaUserLogado();
+        Usuario user = selecionaUserLogado();
         
         do{
             System.out.println(user+" digite o seu tweet(de 1 a 140 caracteres):");
@@ -303,7 +307,7 @@ public class Twitter {
         
         while(iter.hasNext()){
             Usuario item = iter.next();
-            if(item.getLogin().equals(user)){
+            if(item.getLogin().equals(user.getLogin())){
                 if(item.setTweet(tweet+"\n"+dataDia+" - "+dataHora)){
                     //item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
                     feedTweets.add(tweet+"\n "+dataDia+" - "+dataHora+"\n@"+item.getLogin());
@@ -313,7 +317,7 @@ public class Twitter {
             }
         }
     }
-    //método para mostrar os últimos tweets (mais recentes)
+//método para mostrar os últimos tweets (mais recentes)
     public static void mostraTweets(){
         if(feedTweets.size() == 0){
             System.out.println("*****\nNenhum tweet feito, voltando ao menu\n*****");
@@ -336,14 +340,19 @@ public class Twitter {
                 System.out.println(feedTweets.get(i));    
             }
         }
-
     }
+
+    public static void apagaTweet(){
+     
+        selecionaUserLogado();
+    }
+
 
 
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- mostrar últimos tweets do feed\n...\n ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n...\n ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -374,7 +383,11 @@ public class Twitter {
                 tweeta();
                 break;
             case 6:
+                System.out.println("Mostrar");
                 mostraTweets();
+                break;
+            case 7:
+                System.out.println("Apagar tweet");
                 break;
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
