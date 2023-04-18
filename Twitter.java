@@ -24,7 +24,7 @@ public class Twitter {
     private static ArrayList<Usuario> usersLogados = new ArrayList<Usuario>();
     //ArrayLists que funcionam como feed, duas ArrayLists para ligar as posições dos textos aos usuários
     private static ArrayList<String> feedTweets = new ArrayList<String>();
-    private static ArrayList<String> feedUser = new ArrayList<String>();
+
   
 
 
@@ -283,7 +283,7 @@ public class Twitter {
 //Bloco para o usuário logado selecionado digitar um tweet de 1 de 140 caracteres.
     public static void tweeta(){
         Date dataHoraAtual = new Date();
-        String tweet, dataDia = new SimpleDateFormat("DD/MM/YYYY").format(dataHoraAtual), dataHora = new SimpleDateFormat("HH:MM").format(dataHoraAtual);
+        String tweet, dataDia = new SimpleDateFormat("dd/MM/YYYY").format(dataHoraAtual), dataHora = new SimpleDateFormat("HH:MM").format(dataHoraAtual);
         int tamanho;
 
         Iterator<Usuario> iter = usersLogados.iterator();
@@ -304,12 +304,39 @@ public class Twitter {
         while(iter.hasNext()){
             Usuario item = iter.next();
             if(item.getLogin().equals(user)){
-                item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
-                feedUser.add(item.getLogin());
-                feedTweets.add(tweet+"\n"+dataDia+" - "+dataHora);
-
+                if(item.setTweet(tweet+"\n"+dataDia+" - "+dataHora)){
+                    //item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
+                    feedTweets.add(tweet+"\n "+dataDia+" - "+dataHora+"\n@"+item.getLogin());
+                }else{
+                    System.out.println("*****\nTweet Repetido, não é possível prosseguir\n*****");
+                }
             }
         }
+    }
+    //método para mostrar os últimos tweets (mais recentes)
+    public static void mostraTweets(){
+        if(feedTweets.size() == 0){
+            System.out.println("*****\nNenhum tweet feito, voltando ao menu\n*****");
+            return;
+        }
+
+        System.out.print("Digite a quantidade de últimos tweets que quer ver, no total de "+feedTweets.size()+": ");
+        int opcao = input.nextInt();
+
+        if(opcao <= 0){
+            System.out.println("*****\nVoltando ao menu\n*****");
+            return;
+        }
+        if(opcao > feedTweets.size()){
+            for(int i = feedTweets.size()-1; i >= 0;i--){
+                System.out.println(feedTweets.get(i));    
+            }
+        }else{
+            for(int i = feedTweets.size()-1; i >= (feedTweets.size()-1)-opcao;i--){
+                System.out.println(feedTweets.get(i));    
+            }
+        }
+
     }
 
 
@@ -346,7 +373,9 @@ public class Twitter {
                 System.out.println("Tweetar");
                 tweeta();
                 break;
-            
+            case 6:
+                mostraTweets();
+                break;
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
                 break;

@@ -32,19 +32,24 @@ public class Usuario{
 
         while(iter.hasNext()){
             String item = iter.next();
-            if(tweet.equals(item));
-            return false;
+            if(tweet.equals(item)){
+                return false;
+            }else{
+                return true;
+            }
+            
         }
         return true;
     }
     
-    public void setTweet(String tweet){
+    public Boolean setTweet(String tweet){
         if(!verificaTweets(tweet)){
-            System.out.println("*****\nTweet Repetido, não é possível prosseguir\n*****");
+            return false;
             
         }else{
             tweets.add(tweet);
             System.out.println("TWEETADO");
+            return true;
         }  
     }
 
