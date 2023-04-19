@@ -21,7 +21,7 @@ public class Twitter {
     //ArrayList que salva os usuários como objetos usuários
     private static ArrayList<Usuario> arrayUser = new ArrayList<Usuario>();
     //ArrayList que salva os usuários que estão logados (obs.: método utilizado, pois podem dois ou mais user estarem logados ao mesmo tempo)
-    private static ArrayList<Usuario> usersLogados = new ArrayList<Usuario>();
+    private static ArrayList<String> usersLogados = new ArrayList<String>();
     //ArrayLists que funcionam como feed, duas ArrayLists para ligar as posições dos textos aos usuários
     private static ArrayList<String> feedTweets = new ArrayList<String>();
 
@@ -205,46 +205,57 @@ public class Twitter {
             return;
         }
         
-        usersLogados.add(user);
+        usersLogados.add(user.getLogin());
     } 
+
+    public static Boolean verificaUserLogado(){
+        Iterator<String> iter = usersLogados.iterator();
+        if(!iter.hasNext()){
+            System.out.println("*****\nNenhum usuário logado - operação impossível\n*****\n");
+            //retorna se não há nenhum user logado
+            return false;
+        }else{
+            return true;
+        }
+    }
     
 //Bloco para tirar o usuario selecionado da ArrayList usersLogados, deslogando ele
     public static void deslogarUsuarios(){
-        Iterator<Usuario> iter = usersLogados.iterator();
+        Iterator<String> iter = usersLogados.iterator();
 
         //String abaixo apenas inicializa a variável como não vazia, apenas para não acusar erro
         String opcao = "oi";
         Boolean maisUmaVerificacao = true;
 
         ArrayList<String> nomes = new ArrayList<String>();
-        if(!iter.hasNext()){
-            maisUmaVerificacao = false;
-            System.out.println("*****\nNenhum user logado - operação impossivel\n*****\n");
+        if(!verificaUserLogado()){
+            verificaUserLogado();
+            return;
         }
 
 
         System.out.println("\n*****\nLista de usuarios: ");
-        for(Usuario user : usersLogados){
-            System.out.printf("* %s\n", user.getLogin());
-            nomes.add(user.getLogin());
+        for(String user : usersLogados){
+            System.out.printf("* %s\n", user);
+            nomes.add(user);
         }        
         while(maisUmaVerificacao){
             System.out.printf("Qual usuário gostaria de deslogar (digite username)? ");
             opcao = input.next();
             //Limpa o buffer
             input.nextLine();
-            for(Usuario user : usersLogados){
-                if(user.getNome().equals(opcao)){
+            for(String user : usersLogados){
+                if(user.equals(opcao)){
                     maisUmaVerificacao = false;
                 }   
             }
         }
         while(iter.hasNext()){
-            Usuario item = iter.next();
+            String item = iter.next();
             for(String nome : nomes){
-                if(item.getLogin().equals(opcao)){
+                if(item.equals(opcao)){
                     
-                    System.out.println("User "+item.getLogin()+" deslogado");
+                    System.out.println("User "+item+" deslogado");
                     iter.remove();
                 }
             }
@@ -253,34 +264,49 @@ public class Twitter {
 
 //Método para selecionar usuário logado
     public static Usuario selecionaUserLogado(){
-        Iterator<Usuario> iter = usersLogados.iterator();
-        int quantidade = 0, opcao, quantidadeAux = 0;
+        Iterator<String> iter = usersLogados.iterator();
+        Iterator<Usuario> iterUser = arrayUser.iterator();
 
+        int valida = 0, quantidade = 1;
+        String opcao, opcaoAux;
+        
         do{
-            System.out.print("Selecione o numero do usuário logado: ");
+            System.out.print("Digite o numero correspondente do usuário logado que quer selecionar: ");
             
             while(iter.hasNext()){
-                Usuario item = iter.next();
+                String item = iter.next();
 
-                System.out.printf("\n%d - %s\n",quantidade+1, item.getNome());
-                quantidade++;
+                System.out.printf("\n%d - %s\n", quantidade, item);
+
             }
-            opcao = input.nextInt()-1;
+            opcao = input.next();
             //limpa o buffer
             input.nextLine();
-        }while(opcao <= 0 && opcao > quantidade+1);
+            for(String user : usersLogados){
+                if(opcao.equals(user)){
+                    valida = 1;
+                }else{
+                    System.out.print("usuario inexistente");
+                    System.out.println("Gostaria de sair?\nsim\nnao");
+                    if(input.next().equals("sim")){
+                       return new Usuario(); 
+                    }
+                    valida = 0;
+                }
+            }
+        }while(valida == 0);
 
-        while(iter.hasNext()){
-            Usuario item = iter.next();
-    
-            if(quantidadeAux == opcao){
+
+        while(iterUser.hasNext()){
+            Usuario item = iterUser.next();
+            
+            if(opcao.equals(item.getLogin())){
                 return item;
             }
         }
         
         //apenas para satisfazer o método, não é para retornar nunca
-        Usuario userTeste =new Usuario("12651961%$#@", "126519610320#@!$!#@!#", "12651961$#@$", "12651961$@#!");
-        return userTeste;
+        return new Usuario();
     }
 
 
@@ -290,17 +316,20 @@ public class Twitter {
         String tweet, dataDia = new SimpleDateFormat("dd/MM/YYYY").format(dataHoraAtual), dataHora = new SimpleDateFormat("HH:MM").format(dataHoraAtual);
         int tamanho;
 
-        Iterator<Usuario> iter = usersLogados.iterator();
-        if(!iter.hasNext()){
-            System.out.println("*****\nNenhum usuário logado, operação impossível\n*****\n");
-            //retorna se não há nenhum user logado
+        Iterator<Usuario> iter = arrayUser.iterator();
+
+        if(!verificaUserLogado()){
+            verificaUserLogado();
             return;
         }
 
         Usuario user = selecionaUserLogado();
+        if(user.getLogin().equals(null)){
+            return;
+        }
         
         do{
-            System.out.println(user+" digite o seu tweet(de 1 a 140 caracteres):");
+            System.out.println("@"+user.getLogin()+" digite o seu tweet(de 1 a 140 caracteres):");
             tweet = input.nextLine();
             tamanho = tweet.length();
         }while(tamanho <1 && tamanho >140);
@@ -341,13 +370,63 @@ public class Twitter {
             }
         }
     }
-
+//Apaga o tweet do user que foi selecionado, que já estava logado
     public static void apagaTweet(){
-     
-        selecionaUserLogado();
+        if(!verificaUserLogado()){
+            verificaUserLogado();
+            return;
+        }
+        Iterator<String> iterFeed = feedTweets.iterator();
+        Iterator<Usuario> iterUser = arrayUser.iterator();
+        
+        Usuario user = selecionaUserLogado();
+
+        if(user.getLogin().equals(null)){
+            return;
+        }
+
+        ArrayList<String> tweetUser = user.getTweet();
+        int quantidade = 1, opcaoFrom, opcaoTo;
+
+        System.out.println("De qual tweet até qual gostaria de deletar?\nCaso desista, digite 0 e 0");
+        for(String tweet: tweetUser){
+            System.out.println(quantidade+". "+tweet+"\n---------");
+            quantidade++;
+        }
+        do{
+            System.out.print("De: ");
+            opcaoFrom = input.nextInt();
+
+            System.out.print("Até: ");
+            opcaoTo = input.nextInt();
+
+            if(opcaoFrom == 0 && opcaoTo == 0){
+                System.out.println("Voltando ao menu");
+                return;
+            }
+        }while(opcaoFrom < opcaoTo && opcaoTo <=quantidade);
+        
+        quantidade = 1;
+
+        while(iterUser.hasNext()){
+            Usuario item = iterUser.next();
+            if(user.getLogin().equals(item.getLogin())){
+                item.apagaTweet(opcaoTo, opcaoFrom);
+                while(iterFeed.hasNext()){
+                    String itemFeed = iterFeed.next();
+                    if(opcaoFrom <= quantidade && quantidade <= opcaoTo){
+                        for(String tweet:tweetUser){
+                            if(tweet.equals(itemFeed)){
+                                feedTweets.remove(itemFeed);
+                            }
+                        } 
+                    } 
+                    quantidade++;
+                }
+            }
+            quantidade++;
+        }
     }
-
-
 
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
@@ -388,6 +467,7 @@ public class Twitter {
                 break;
             case 7:
                 System.out.println("Apagar tweet");
+                apagaTweet();
                 break;
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
