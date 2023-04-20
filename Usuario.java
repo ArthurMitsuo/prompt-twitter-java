@@ -23,11 +23,12 @@ public class Usuario{
         }
         return false;
     }
-    public void setSenha(String senha){
-        if(validaSenha(senha) == true){
-
+    public void setSenha(String senhaAntiga, String senhaNova){
+        if(validaSenha(senhaAntiga) == true){
+            System.out.println("*****\nSenha alterada com sucesso!!\n*****\n");
+            this.senha = senhaNova;
         }else{
-            System.out.println("*****\nSenha Incorreta, Impossível alterar\n*****\n");
+            System.out.println("*****\nSenha Incorreta, Impossível alterar!!\n*****\n");
         }
     }
 

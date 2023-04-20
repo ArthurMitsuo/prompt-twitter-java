@@ -257,7 +257,10 @@ public class Twitter {
 
         int valida = 0, quantidade = 1, opcao;
         String opcaoAux = null;
-        
+        if(!iter.hasNext()){
+            System.out.println("Nenhum user logado");
+            return new Usuario();
+        }
         do{
             System.out.print("Digite o numero correspondente do usuário logado que quer selecionar: ");
             
@@ -331,7 +334,7 @@ public class Twitter {
         }
 
         Usuario user = selecionaUserLogado();
-        if(user.getLogin().equals(null)){
+        if(user.getLogin() == null){
             return;
         }
         
@@ -387,22 +390,15 @@ public class Twitter {
         Iterator<Usuario> iterUser = arrayUser.iterator();
         
         Usuario user = selecionaUserLogado();
-
-        if(user.getLogin().equals(null)){
+        if(user.getLogin() == null){
             return;
         }
 
+        //pega o retorno do método da classe usuário, que são os tweets daquele usuário
         ArrayList<String> tweetUser = user.getTweet();
 
-        //ArrayList que guarda posição dos tweets a serem deletados do feed, em iteração
-        ArrayList<Integer> guardaPosFeed = new ArrayList<Integer>();
-        ArrayList<String> guardaTweetUser = new ArrayList<String>();
-
-        Iterator<String> iterTweets = tweetUser.iterator();
-
-        //Converte para uma array, do jeito anterior mais pra frente dava erro de modificação concorrente
-        String arrayTweets[] = tweetUser.toArray(new String[feedTweets.size()]);
-        
+        //ArrayList que guarda os tweets a serem deletados do feed, em iteração
+        ArrayList<String> guardaTweetUser = new ArrayList<String>();      
 
         int quantidade = 1, opcaoFrom, opcaoTo;
 
@@ -424,12 +420,13 @@ public class Twitter {
             }
         }while(opcaoFrom > opcaoTo || opcaoTo > quantidade);
 
+/*      BLOCO INUTIL - VERIFICAR   
         quantidade = 0;
         for(int i = 0; i <feedTweets.size(); i++){
             if(i >= opcaoFrom && i <=opcaoTo){
                 quantidade++;
             }
-        }
+        } */
     
         while(iterUser.hasNext()){
             Usuario itemUser = iterUser.next();
@@ -462,10 +459,62 @@ public class Twitter {
         }
     }
 
+    private static void alteraSenha(){
+        Usuario user = selecionaUserLogado();
+        if(user.getLogin() == null){
+            return;
+        }
+        String senhaAtual, senhaNova;
+        int valida=0;
+
+        do{
+            System.out.print("Para alterar a senha, digite a senha atual:\n");
+            senhaAtual = input.next();
+            if(!user.validaSenha(senhaAtual)){
+                System.out.println("*****\nSENHA INCORRETA\n*****\nGostaria de sair?\n1 - sim\n2 - tentar de novo");
+                valida = input.nextInt();
+                input.nextLine();
+                if(valida == 1){
+                    return;
+                }else if(valida >2 || valida <=0){
+                    System.out.println("Opção inexistente");
+                }
+            }else{
+                valida = 1;
+            }
+        }while(valida!=1);
+
+        System.out.print("Digite a nova senha: ");
+        senhaNova = input.next();
+
+        user.setSenha(senhaAtual, senhaNova);
+    }
+
+    private static void removeUser(){
+        System.out.println("Qual user gostaria de remover?");
+        Usuario user = selecionaUserLogado();
+        if(user.getLogin() == null){
+            return;
+        }
+        
+        Iterator<Usuario> iter = arrayUser.iterator();
+
+        while(iter.hasNext()){
+            Usuario item = iter.next();
+
+            if(item.getLogin() == user.getLogin()){
+                arrayUser.remove(item);
+                break;
+            }
+        }
+
+
+    }
+
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n...\n ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n8 - Alterar senha de um usuário\n9 - remover um usuário\n...\n ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -502,6 +551,13 @@ public class Twitter {
             case 7:
                 System.out.println("Apagar tweet");
                 apagaTweet();
+                break;
+            case 8:
+                System.out.println("Altera a senha");
+                alteraSenha();
+                break;
+            case 9:
+                System.out.println("Remover usuario");
                 break;
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");
