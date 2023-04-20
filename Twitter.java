@@ -437,7 +437,6 @@ public class Twitter {
             }
         }
 
-    
         for(String tweet: guardaTweetUser){
             deletaDeDentroDoFeed(tweet);
         }
@@ -464,6 +463,8 @@ public class Twitter {
         if(user.getLogin() == null){
             return;
         }
+        
+
         String senhaAtual, senhaNova;
         int valida=0;
 
@@ -478,6 +479,7 @@ public class Twitter {
                     return;
                 }else if(valida >2 || valida <=0){
                     System.out.println("Opção inexistente");
+                    //item.getTweet()
                 }
             }else{
                 valida = 1;
@@ -496,16 +498,27 @@ public class Twitter {
         if(user.getLogin() == null){
             return;
         }
-        
+        System.out.print("Digite a senha do usuario, para deleta-lo: ");
+        String senha = input.next();
+        if(!user.validaSenha(senha)){
+            System.out.println("Senha incorreta, voltando ao menu");
+            return;
+        }
+
+        ArrayList<String> tweetsUser = user.getTweet();
         Iterator<Usuario> iter = arrayUser.iterator();
 
         while(iter.hasNext()){
             Usuario item = iter.next();
 
             if(item.getLogin() == user.getLogin()){
+                System.out.println("*****\nUsuario "+item.getLogin()+" deletado com sucesso\n*****\n");
                 arrayUser.remove(item);
                 break;
-            }
+            }       
+        }
+        for(String tweet: tweetsUser){
+            deletaDeDentroDoFeed(tweet);
         }
 
 
@@ -558,6 +571,7 @@ public class Twitter {
                 break;
             case 9:
                 System.out.println("Remover usuario");
+                removeUser();
                 break;
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");

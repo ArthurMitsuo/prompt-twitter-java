@@ -23,6 +23,7 @@ public class Usuario{
         }
         return false;
     }
+    
     public void setSenha(String senhaAntiga, String senhaNova){
         if(validaSenha(senhaAntiga) == true){
             System.out.println("*****\nSenha alterada com sucesso!!\n*****\n");
