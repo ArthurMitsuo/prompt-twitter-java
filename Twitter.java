@@ -283,10 +283,14 @@ public class Twitter {
                     int validaAux = 0;
                     while(validaAux == 0){
                         System.out.print("usuario inexistente\n");
-                        System.out.println("Gostaria de sair?\nsim\nnao");
-                        if(input.next().equals("sim")){
+                        System.out.println("Gostaria de sair?\n1 - sim\n2 - nao");
+                        int valor = input.nextInt();
+                        
+                        input.nextLine();
+
+                        if(valor == 1){
                             return new Usuario(); 
-                        }else if(input.next().equals("nao")){
+                        }else if(valor == 2){
                             valida = 0;
                             validaAux = 1;
                         }else{
@@ -316,7 +320,7 @@ public class Twitter {
 //Bloco para o usuário logado selecionado digitar um tweet de 1 de 140 caracteres.
     public static void tweeta(){
         Date dataHoraAtual = new Date();
-        String tweet, dataDia = new SimpleDateFormat("dd/MM/YYYY").format(dataHoraAtual), dataHora = new SimpleDateFormat("HH:MM").format(dataHoraAtual);
+        String tweet, dataDia = new SimpleDateFormat("dd/MM/YYYY").format(dataHoraAtual), dataHora = new SimpleDateFormat("HH:MM:ss").format(dataHoraAtual);
         int tamanho;
 
         Iterator<Usuario> iter = arrayUser.iterator();
@@ -340,7 +344,7 @@ public class Twitter {
         while(iter.hasNext()){
             Usuario item = iter.next();
             if(item.getLogin().equals(user.getLogin())){
-                if(item.setTweet(tweet+"\n"+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin())){
+                if(item.setTweet(tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin())){
                     //item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
                     feedTweets.add(tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin());
                 }else{
@@ -389,9 +393,16 @@ public class Twitter {
         }
 
         ArrayList<String> tweetUser = user.getTweet();
+
+        //ArrayList que guarda posição dos tweets a serem deletados do feed, em iteração
+        ArrayList<Integer> guardaPosFeed = new ArrayList<Integer>();
+        ArrayList<String> guardaTweetUser = new ArrayList<String>();
+
         Iterator<String> iterTweets = tweetUser.iterator();
+
         //Converte para uma array, do jeito anterior mais pra frente dava erro de modificação concorrente
-        String[] arrayTweets = tweetUser.toArray(new String[0]);
+        String arrayTweets[] = tweetUser.toArray(new String[feedTweets.size()]);
+        
 
         int quantidade = 1, opcaoFrom, opcaoTo;
 
@@ -413,27 +424,41 @@ public class Twitter {
             }
         }while(opcaoFrom > opcaoTo || opcaoTo > quantidade);
 
+        quantidade = 0;
+        for(int i = 0; i <feedTweets.size(); i++){
+            if(i >= opcaoFrom && i <=opcaoTo){
+                quantidade++;
+            }
+        }
+    
         while(iterUser.hasNext()){
             Usuario itemUser = iterUser.next();
             if(user.getLogin().equals(itemUser.getLogin())){
+                guardaTweetUser = itemUser.getTweetDeletado(opcaoFrom, opcaoTo);
                 itemUser.apagaTweet(opcaoFrom, opcaoTo);
                 break;
             }
         }
-        //DANDO PROBLEMA PARA DELETAR DO ARRAYLIST FEED
-        quantidade = 1;
-        System.out.println("AQUI APARECE");
-        for(int i = 1; i <= arrayTweets.length; i++){
-            if(opcaoFrom <= quantidade && quantidade <= opcaoTo){
-                while(iterFeed.hasNext()){
-                    String itemFeed = iterFeed.next();
-                    if(arrayTweets[i].equals(itemFeed)){
-                        System.out.println(itemFeed+"\n REMOVIDO");
-                        feedTweets.remove(itemFeed);
-                    }
-                }
+
+    
+        for(String tweet: guardaTweetUser){
+            deletaDeDentroDoFeed(tweet);
+        }
+    }
+
+    private static void deletaDeDentroDoFeed(String valor){
+
+        Iterator<String> iterFeed = feedTweets.iterator();
+
+        while(iterFeed.hasNext()){
+
+            String item = iterFeed.next();
+
+            if(item.equals(valor)){
+
+                feedTweets.remove(item);
+                return;
             }
-            quantidade++;
         }
     }
 

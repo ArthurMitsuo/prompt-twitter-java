@@ -69,24 +69,46 @@ public class Usuario{
 
     public void apagaTweet(int i, int f){
         Iterator<String> iter = tweets.iterator();
-        int quantidade = 1;
+       
 
         if(!iter.hasNext()){
             System.out.println("User não possui tweets");
             return;
         }else{
+            int quantidade = 1;
             while(iter.hasNext()){
                 String item = iter.next();
 
                 if(i <= quantidade && quantidade <= f){
-                    tweets.remove(item);
+                    iter.remove();
                     System.out.println("Tweets Apagados com sucesso");
+                }if(quantidade>f){
+                    return;
                 }
                 quantidade++;
             }
         }
-
     }
+
+    public ArrayList<String> getTweetDeletado(int i, int f){
+        Iterator<String> iter = tweets.iterator();
+
+        ArrayList<String> retorno = new ArrayList<String>();
+
+        int quantidade = 1;
+        while(iter.hasNext()){
+            String item = iter.next();
+
+            if(i <= quantidade && quantidade <= f){
+                retorno.add(item);
+            }if(quantidade>f){
+                break;
+            }
+            quantidade++;
+        }
+        return retorno;
+    }
+   
 
     public String getNome(){
         return nome;
