@@ -47,11 +47,8 @@ public class Twitter {
     }
     private static Boolean verificaCaracterS(String item){
         if(item.length() >= 6 && item.length() <= 15){
-            System.out.println(item.length());
             return true;
         }else{
-            System.out.println(item.length());
-            System.out.println("Digite entre 6 e 15 caracteres para a senha!");
             return false;
         }
     }
@@ -74,18 +71,18 @@ public class Twitter {
         Iterator<String> iter = logins.iterator();
         if(!iter.hasNext()){
             logins.add(login);
-            System.out.println("Cadastrado");
+
             return 0;
         }else{
             while(iter.hasNext()){
                 //String item = iter.next();
                 if(verificaLogin(login) == 0){
-                    System.out.println("Cadastrado");
+
                     logins.add(login);
                     return 0;
                 }else{
                     //System.out.println(iter);
-                    System.out.println("Login impossivel");
+                    System.out.println("Nome de Login impossivel");
                     return 1;
                 }
             }
@@ -233,11 +230,14 @@ public class Twitter {
 
         ArrayList<String> nomes = new ArrayList<String>();
         if(!verificaUserLogado()){
-            verificaUserLogado();
+            //verificaUserLogado();
             return;
         }
 
         Usuario user = selecionaUserLogado();
+        if(user.getLogin()==null){
+            return;
+        }
 
         while(iter.hasNext()){
             String item = iter.next();
@@ -264,13 +264,11 @@ public class Twitter {
         do{
             System.out.print("Digite o numero correspondente do usuário logado que quer selecionar: ");
             
-            while(iter.hasNext()){
-                String item = iter.next();
-
-                System.out.printf("\n%d - %s", quantidade, item);
+            for(String user: usersLogados){
+                System.out.printf("\n%d - %s\n", quantidade, user);
                 quantidade++;
             }
-            System.out.println("\n");
+            //System.out.println("\n");
             opcao = input.nextInt();
             //limpa o buffer
             input.nextLine();
@@ -287,15 +285,15 @@ public class Twitter {
                     while(validaAux == 0){
                         System.out.print("usuario inexistente\n");
                         System.out.println("Gostaria de sair?\n1 - sim\n2 - nao");
-                        int valor = input.nextInt();
-                        
-                        input.nextLine();
+                        int valor;
+                        valor= input.nextInt();
 
                         if(valor == 1){
-                            return new Usuario(); 
+                            validaAux = 1;
+                            return new Usuario();
                         }else if(valor == 2){
                             valida = 0;
-                            validaAux = 1;
+                            validaAux =0;
                         }else{
                             System.out.println("Opção impossível");
                         }
@@ -524,10 +522,46 @@ public class Twitter {
 
     }
 
+    private static void mostraEstats(){
+        ArrayList<Integer> quantidadeTweets = new ArrayList<Integer>();
+        int contador = 0, contadorAux = 0, maior= 0, pointer = 0;
+
+        for(Usuario user: arrayUser){
+            System.out.println("Total users cadastrados - "+user.getQuantidadeUsersCadastrados());
+            break;
+        } 
+
+        System.out.println("Quantidades de users logados agora - "+usersLogados.size());
+
+        System.out.println("Número total de tweets até agora - "+feedTweets.size());
+
+        System.out.println("Número de tweets por user:");
+        for(Usuario user: arrayUser){
+            System.out.printf("@%s - %d\n", user.getLogin(), user.getQuantidadeTweetsPorUser());
+            quantidadeTweets.add(user.getQuantidadeTweetsPorUser());
+            if(user.getQuantidadeTweetsPorUser() > maior){
+                maior = user.getQuantidadeTweetsPorUser();
+                pointer = contador;
+            }
+            contador++;
+        } 
+
+        contador=0;
+        System.out.print("User que mais tweetou: ");
+        for(Usuario user: arrayUser){
+            if(pointer == contador){
+                System.out.println("@"+user.getLogin()+" - "+user.getQuantidadeTweetsPorUser());
+            }
+            contador++;
+        }
+
+        System.out.println("Último tweet e de qual usuário:\n"+feedTweets.get(feedTweets.size()-1)+"\n---------");
+    }
+
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n8 - Alterar senha de um usuário\n9 - remover um usuário\n...\n ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n8 - Alterar senha de um usuário\n9 - remover um usuário\n10- imprimir estatísticas\nO que gostaria de fazer? Digite o número correspondente da opcao: \n ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -572,6 +606,10 @@ public class Twitter {
             case 9:
                 System.out.println("Remover usuario");
                 removeUser();
+                break;
+            case 10:
+                System.out.println("Estatísticas");
+                mostraEstats();
                 break;
             default:
                 System.out.println("\n****\nOPÇÃO INEXISTENTE\n****");

@@ -3,7 +3,8 @@ import java.util.Iterator;
 
 public class Usuario{
     private String nome, login, email, senha;
-    public static int quantidadeUsersCadastrados = 0;
+    public static int quantidadeUsersCadastrados;
+    private int quantidadeTweetsPorUser;
     public ArrayList<String> tweets = new ArrayList<String>();
 
     public Usuario(){
@@ -23,7 +24,7 @@ public class Usuario{
         }
         return false;
     }
-    
+
     public void setSenha(String senhaAntiga, String senhaNova){
         if(validaSenha(senhaAntiga) == true){
             System.out.println("*****\nSenha alterada com sucesso!!\n*****\n");
@@ -55,6 +56,7 @@ public class Usuario{
         }else{
             tweets.add(tweet);
             System.out.println("TWEETADO");
+            quantidadeTweetsPorUser++;
             return true;
         }  
     }
@@ -67,6 +69,10 @@ public class Usuario{
             return tweets;
         }
         return tweets;
+    }
+
+    public int getQuantidadeTweets(){
+        return tweets.size();
     }
 
     public void apagaTweet(int i, int f){
@@ -110,8 +116,12 @@ public class Usuario{
         }
         return retorno;
     }
-   
-
+    public int getQuantidadeTweetsPorUser(){
+        return quantidadeTweetsPorUser;
+    } 
+    public int getQuantidadeUsersCadastrados(){
+        return quantidadeUsersCadastrados;
+    } 
     public String getNome(){
         return nome;
     }
