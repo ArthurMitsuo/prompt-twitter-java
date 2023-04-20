@@ -250,53 +250,57 @@ public class Twitter {
         Iterator<String> iter = usersLogados.iterator();
         Iterator<Usuario> iterUser = arrayUser.iterator();
 
-        int valida = 0, quantidade = 1, opcao;
-        String opcaoAux = null;
+        int valida = 0, quantidade = 1;
+        String opcaoAux = null, opcao;
         if(!iter.hasNext()){
             System.out.println("Nenhum user logado");
             return new Usuario();
         }
         do{
             quantidade = 1;
-            System.out.print("Digite o numero correspondente do usuário logado que quer selecionar: ");
+            System.out.print("Usuarios logados");
             
             for(String user: usersLogados){
-                System.out.printf("\n%d - %s\n", quantidade, user);
+                System.out.printf("\n* - %s", user);
                 quantidade++;
             }
             //System.out.println("\n");
-            opcao = input.nextInt();
-            //limpa o buffer
-            input.nextLine();
+            System.out.println("\nDigite o usuário que quer selecionar: ");
+            opcao = input.nextLine();
 
             quantidade = 1;
 
             for(String user : usersLogados){
-                if(opcao == quantidade && opcao <= usersLogados.size()){
+                if(opcao.equals(user) ){
                     valida = 1;
                     opcaoAux = user;
-                    break;
-                }else if(!(opcao <= usersLogados.size())){
-                    int validaAux = 0;
-                    while(validaAux == 0){
-                        System.out.print("usuario inexistente\n");
-                        System.out.println("Gostaria de sair?\n1 - sim\n2 - nao");
-                        int valor;
-                        valor= input.nextInt();
+                    break;  
+                }   
+            }
+            if(valida != 1){
+                for(String user : usersLogados){
+                    if(!opcao.equals(user)){
+                        int validaAux = 0;
+                        while(validaAux == 0){
+                            System.out.print("usuario inexistente\n");
+                            System.out.println("Gostaria de sair?\n1 - sim\n2 - nao");
+                            int valor;
+                            valor= input.nextInt();
 
-                        if(valor == 1){
-                            validaAux = 1;
-                            return new Usuario();
-                        }else if(valor == 2){
-                            valida = 0;
-                            validaAux =0;
-                            break;
-                        }else{
-                            System.out.println("Opção impossível");
+                            if(valor == 1){
+                                validaAux = 1;
+                                return new Usuario();
+                            }else if(valor == 2){
+                                valida = 0;
+                                validaAux =0;
+                                break;
+                            }else{
+                                System.out.println("Opção impossível");
+                            }
                         }
-                    }  
+                    }
+                    quantidade++;
                 }
-                quantidade++;
             }
         }while(valida == 0);
 
@@ -309,6 +313,7 @@ public class Twitter {
                 return item;
             }
         }
+    
         
         //apenas para satisfazer o método, não é para retornar nunca
         return new Usuario();
@@ -414,14 +419,6 @@ public class Twitter {
                 return;
             }
         }while(opcaoFrom > opcaoTo || opcaoTo > quantidade);
-
-/*      BLOCO INUTIL - VERIFICAR   
-        quantidade = 0;
-        for(int i = 0; i <feedTweets.size(); i++){
-            if(i >= opcaoFrom && i <=opcaoTo){
-                quantidade++;
-            }
-        } */
     
         while(iterUser.hasNext()){
             Usuario itemUser = iterUser.next();
