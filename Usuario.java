@@ -43,8 +43,7 @@ public class Usuario{
                 return false;
             }else{
                 return true;
-            }
-            
+            } 
         }
         return true;
     }
@@ -78,7 +77,6 @@ public class Usuario{
     public void apagaTweet(int i, int f){
         Iterator<String> iter = tweets.iterator();
        
-
         if(!iter.hasNext()){
             System.out.println("User não possui tweets");
             return;

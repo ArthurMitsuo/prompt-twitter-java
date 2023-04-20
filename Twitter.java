@@ -563,7 +563,7 @@ public class Twitter {
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
 
-        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n8 - Alterar senha de um usuário\n9 - remover um usuário\n10- imprimir estatísticas\nO que gostaria de fazer? Digite o número correspondente da opcao: \n ");
+        System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n8 - Alterar senha de um usuário\n9 - remover um usuário\n10- imprimir estatísticas\n0 - Sair\nO que gostaria de fazer? Digite o número correspondente da opcao: \n ");
         int opcao = input.nextInt();
         //limpa o buffer
         input.nextLine();
@@ -622,5 +622,5 @@ public class Twitter {
         while(verificacao){
             menuInicial();
         }       
-    }//arthur osmario felipe
+    }
 }
