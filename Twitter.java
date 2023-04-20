@@ -224,11 +224,6 @@ public class Twitter {
     public static void deslogarUsuarios(){
         Iterator<String> iter = usersLogados.iterator();
 
-        //String abaixo apenas inicializa a variável como não vazia, apenas para não acusar erro
-        String opcao = "oi";
-        Boolean maisUmaVerificacao = true;
-
-        ArrayList<String> nomes = new ArrayList<String>();
         if(!verificaUserLogado()){
             //verificaUserLogado();
             return;
@@ -262,6 +257,7 @@ public class Twitter {
             return new Usuario();
         }
         do{
+            quantidade = 1;
             System.out.print("Digite o numero correspondente do usuário logado que quer selecionar: ");
             
             for(String user: usersLogados){
@@ -294,6 +290,7 @@ public class Twitter {
                         }else if(valor == 2){
                             valida = 0;
                             validaAux =0;
+                            break;
                         }else{
                             System.out.println("Opção impossível");
                         }
@@ -512,6 +509,7 @@ public class Twitter {
             if(item.getLogin() == user.getLogin()){
                 System.out.println("*****\nUsuario "+item.getLogin()+" deletado com sucesso\n*****\n");
                 arrayUser.remove(item);
+                usersLogados.remove(item.getLogin());
                 break;
             }       
         }
@@ -555,7 +553,11 @@ public class Twitter {
             contador++;
         }
 
-        System.out.println("Último tweet e de qual usuário:\n"+feedTweets.get(feedTweets.size()-1)+"\n---------");
+        if(feedTweets.size() == 0){
+            System.out.println("Sem nenhum tweet!!");
+        }else{
+            System.out.println("Último tweet e de qual usuário:\n"+feedTweets.get(feedTweets.size()-1)+"\n---------");
+        }
     }
 
 //Bloco destinado ao menu inicial
