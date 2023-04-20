@@ -92,14 +92,16 @@ public class Twitter {
 
 //Bloco que instância um novo usuário e o retorna, verificando os caracteres;
     static Usuario constroiUsuario(){
-        String nome, login, email, senha;
+        String nome = "", login, email, senha;
         Boolean verificaB;
         int verifica;
-
+        //limpa o buffer
+        input.nextLine();
         do{
             System.out.println("NOME: ");
             nome = input.nextLine();
             verificaB = verificaCaracterNL(nome);
+            System.out.println(verificaB);
         }while(!verificaB);
         
         do{  
@@ -148,7 +150,7 @@ public class Twitter {
         Boolean validacao = true;
         while(true){
             String login, senha;
-            int tentativa=1, quantidade=0;
+            int quantidade=0, tentativa = 0;
             
             for(Usuario user:arrayUser){
                 quantidade++;
@@ -180,7 +182,16 @@ public class Twitter {
             System.out.println("*****\nLogin ou senha inválidos\n*****");
             while(tentativa != 1 || tentativa != 2){
                 System.out.println("\nAções possiveis:\n1 - Tentar de novo\n2 - Voltar para o Menu");
-                tentativa = input.nextInt();
+                Boolean valida = true;
+                do{
+                    String opcaoAux = input.next();
+                    if(isNumeric(opcaoAux)){
+                        tentativa = Integer.parseInt(opcaoAux);
+                        valida = false;
+                    }else{
+                        System.out.println("Apenas numeros, meu amigo");
+                    }
+                }while(valida);
                 if(tentativa == 1){
                     break;
                 }else if(tentativa == 2){
@@ -250,25 +261,22 @@ public class Twitter {
         Iterator<String> iter = usersLogados.iterator();
         Iterator<Usuario> iterUser = arrayUser.iterator();
 
-        int valida = 0, quantidade = 1;
+        int valida = 0;
         String opcaoAux = null, opcao;
         if(!iter.hasNext()){
             System.out.println("Nenhum user logado");
             return new Usuario();
         }
         do{
-            quantidade = 1;
+            
             System.out.print("Usuarios logados");
             
             for(String user: usersLogados){
                 System.out.printf("\n* - %s", user);
-                quantidade++;
             }
             //System.out.println("\n");
             System.out.println("\nDigite o usuário que quer selecionar: ");
-            opcao = input.nextLine();
-
-            quantidade = 1;
+            opcao = input.next();
 
             for(String user : usersLogados){
                 if(opcao.equals(user) ){
@@ -284,8 +292,18 @@ public class Twitter {
                         while(validaAux == 0){
                             System.out.print("usuario inexistente\n");
                             System.out.println("Gostaria de sair?\n1 - sim\n2 - nao");
-                            int valor;
-                            valor= input.nextInt();
+                            int valor = 0;
+                            Boolean validacao = true;
+                            do{
+                                String opcaoAuxiliar = input.next();
+                                if(isNumeric(opcaoAuxiliar)){
+                                    valor = Integer.parseInt(opcaoAuxiliar);
+                                    validacao = false;
+                                }else{
+                                    System.out.println("Apenas numeros, meu amigo");
+                                }
+                            }while(validacao);
+                            
 
                             if(valor == 1){
                                 validaAux = 1;
@@ -299,12 +317,9 @@ public class Twitter {
                             }
                         }
                     }
-                    quantidade++;
                 }
             }
         }while(valida == 0);
-
-        quantidade = 1;
 
         while(iterUser.hasNext()){
             Usuario item = iterUser.next();
@@ -312,9 +327,7 @@ public class Twitter {
             if(opcaoAux.equals(item.getLogin())){
                 return item;
             }
-        }
-    
-        
+        } 
         //apenas para satisfazer o método, não é para retornar nunca
         return new Usuario();
     }
@@ -334,6 +347,7 @@ public class Twitter {
         }
 
         Usuario user = selecionaUserLogado();
+        input.nextLine();
         if(user.getLogin() == null){
             return;
         }
@@ -386,7 +400,6 @@ public class Twitter {
             verificaUserLogado();
             return;
         }
-        Iterator<String> iterFeed = feedTweets.iterator();
         Iterator<Usuario> iterUser = arrayUser.iterator();
         
         Usuario user = selecionaUserLogado();
@@ -400,19 +413,46 @@ public class Twitter {
         //ArrayList que guarda os tweets a serem deletados do feed, em iteração
         ArrayList<String> guardaTweetUser = new ArrayList<String>();      
 
-        int quantidade = 1, opcaoFrom, opcaoTo;
+        int quantidade = 1, opcaoFrom = 0, opcaoTo = 0;
 
         System.out.println("De qual tweet até qual gostaria de deletar?\nCaso desista, digite 0 e 0");
+        if(tweetUser.size() == 0){
+            System.out.println("NENHUM TWEET DO USER");
+            return;
+        }
         for(String tweet: tweetUser){
             System.out.println(quantidade+". "+tweet+"\n---------");
             quantidade++;
         }
         do{
-            System.out.print("De: ");
-            opcaoFrom = input.nextInt();
+            String opcao;
+            Boolean valida = true;
+            do{
+                System.out.print("De: ");
+                opcao = input.next();
 
-            System.out.print("Até: ");
-            opcaoTo = input.nextInt();
+                if(isNumeric(opcao)){
+                    opcaoFrom = Integer.parseInt(opcao);
+                    System.out.println(opcao);
+                    valida = false;
+                }else{
+                    System.out.println("Apenas numeros, meu amigo");
+                }
+            }while(valida);
+            valida = true;
+            do{
+                System.out.print("Até: ");
+                opcao = input.next();
+
+                if(isNumeric(opcao)){
+                    opcaoTo = Integer.parseInt(opcao);
+                    System.out.println(opcao);
+                    valida = false;
+                }else{
+                    System.out.println("Apenas numeros, meu amigo");
+                }
+            }while(valida);
+
 
             if(opcaoFrom == 0 && opcaoTo == 0){
                 System.out.println("Voltando ao menu");
@@ -557,13 +597,26 @@ public class Twitter {
         }
     }
 
+    public static boolean isNumeric(String str){
+        return str.matches("-?\\d\\d?");  
+    }
+
 //Bloco destinado ao menu inicial
     public static void menuInicial(){
-
+        Boolean valida = true;
+        int opcao = 0;
+        
         System.out.printf("Menu Principal\n1 - Cadastrar usuario\n2 - Listar usuarios\n3 - Logar usuario\n4 - Deslogar\n5 - Tweetar\n6- Mostrar últimos tweets do feed\n7- Remover tweet de um usuário\n8 - Alterar senha de um usuário\n9 - remover um usuário\n10- imprimir estatísticas\n0 - Sair\nO que gostaria de fazer? Digite o número correspondente da opcao: \n ");
-        int opcao = input.nextInt();
-        //limpa o buffer
-        input.nextLine();
+        do{
+            String opcaoAux = input.next();
+            if(isNumeric(opcaoAux)){
+                opcao = Integer.parseInt(opcaoAux);
+                valida = false;
+            }else{
+                System.out.println("Apenas numeros, meu amigo");
+            }
+        }while(valida);
+        
 
         switch (opcao){
             case 0:
@@ -571,7 +624,7 @@ public class Twitter {
                 verificacao = false;
                 break;
             case 1:
-                System.out.println("Cadastrar");
+                System.out.println("Cadastrar Novo User:");
                 populaArray();
                 break;
             case 2:
@@ -579,11 +632,11 @@ public class Twitter {
                 getUsuario();
                 break;
             case 3:
-                System.out.println("Logar");
+                System.out.println("Logar:");
                 adicionaUserLogado();
                 break;
             case 4:
-                System.out.println("Deslogar");
+                System.out.println("Deslogar user:");
                 deslogarUsuarios();
                 break;
             case 5:
