@@ -236,7 +236,6 @@ public class Twitter {
         Iterator<String> iter = usersLogados.iterator();
 
         if(!verificaUserLogado()){
-            //verificaUserLogado();
             return;
         }
 
@@ -342,7 +341,6 @@ public class Twitter {
         Iterator<Usuario> iter = arrayUser.iterator();
 
         if(!verificaUserLogado()){
-            verificaUserLogado();
             return;
         }
 
@@ -397,7 +395,6 @@ public class Twitter {
 //Apaga o tweet do user que foi selecionado, que já estava logado
     public static void apagaTweet(){
         if(!verificaUserLogado()){
-            verificaUserLogado();
             return;
         }
         Iterator<Usuario> iterUser = arrayUser.iterator();
