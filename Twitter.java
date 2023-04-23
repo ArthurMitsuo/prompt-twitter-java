@@ -59,10 +59,7 @@ public class Twitter {
         while(iter.hasNext()){
             String item = iter.next();
             if(item.equals(login)){
-                System.out.println("tem");
                 return 1; 
-            }else{
-                System.out.println("nao tem");
             }
         }
         return 0;
@@ -77,7 +74,6 @@ public class Twitter {
             while(iter.hasNext()){
                 //String item = iter.next();
                 if(verificaLogin(login) == 0){
-
                     logins.add(login);
                     return 0;
                 }else{
@@ -288,7 +284,7 @@ public class Twitter {
                 for(String user : usersLogados){
                     if(!opcao.equals(user)){
                         int validaAux = 0;
-                        while(validaAux == 0){
+                        do{
                             System.out.print("usuario inexistente\n");
                             System.out.println("Gostaria de sair?\n1 - sim\n2 - nao");
                             int valor = 0;
@@ -309,12 +305,12 @@ public class Twitter {
                                 return new Usuario();
                             }else if(valor == 2){
                                 valida = 0;
-                                validaAux =0;
+                                validaAux = 0;
                                 break;
                             }else{
                                 System.out.println("Opção impossível");
                             }
-                        }
+                        }while(validaAux == 0);
                     }
                 }
             }
@@ -359,9 +355,9 @@ public class Twitter {
         while(iter.hasNext()){
             Usuario item = iter.next();
             if(item.getLogin().equals(user.getLogin())){
-                if(item.setTweet(tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin())){
+                if(item.setTweet("-----\n"+tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin()+"\n-----")){
                     //item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
-                    feedTweets.add(tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin());
+                    feedTweets.add("-----\n"+tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin()+"\n-----");
                 }else{
                     System.out.println("*****\nTweet Repetido, não é possível prosseguir\n*****");
                 }
@@ -462,6 +458,7 @@ public class Twitter {
             if(user.getLogin().equals(itemUser.getLogin())){
                 guardaTweetUser = itemUser.getTweetDeletado(opcaoFrom, opcaoTo);
                 itemUser.apagaTweet(opcaoFrom, opcaoTo);
+                System.out.println("Tweets Apagados com sucesso");
                 break;
             }
         }

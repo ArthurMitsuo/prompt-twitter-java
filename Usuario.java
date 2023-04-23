@@ -87,7 +87,6 @@ public class Usuario{
 
                 if(i <= quantidade && quantidade <= f){
                     iter.remove();
-                    System.out.println("Tweets Apagados com sucesso");
                 }if(quantidade>f){
                     return;
                 }
