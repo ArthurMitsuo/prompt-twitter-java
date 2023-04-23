@@ -356,7 +356,7 @@ public class Twitter {
             Usuario item = iter.next();
             if(item.getLogin().equals(user.getLogin())){
                 if(item.setTweet("-----\n"+tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin()+"\n-----")){
-                    //item.setTweet(tweet+"\n"+dataDia+" - "+dataHora);
+                    totalTweets++;
                     feedTweets.add("-----\n"+tweet+"\n "+dataDia+" - "+dataHora+"\nUser: @"+item.getLogin()+"\n-----");
                 }else{
                     System.out.println("*****\nTweet Repetido, não é possível prosseguir\n*****");
@@ -562,7 +562,7 @@ public class Twitter {
 
         System.out.println("Quantidades de users logados agora - "+usersLogados.size());
 
-        System.out.println("Número total de tweets até agora - "+feedTweets.size());
+        System.out.println("Número total de tweets até agora - "+totalTweets);
 
         System.out.println("Número de tweets por user:");
         for(Usuario user: arrayUser){
